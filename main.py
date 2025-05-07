@@ -5,6 +5,7 @@ class Agent:
     def __init__(self, name, role=None):
         self.name = name
         self.role = role
+        self.task_history = []
 
     def perform_task(self, task):
         print(f"{self.name} is working on: {task}")
@@ -16,9 +17,9 @@ class Agent:
             priority = random.choice(["high", "medium", "low"])
             task_details = {"description": task, "priority": priority}
             print(f"{self.name} created task: {task}")
+            self.track_history.append(f"created task: {task_details}")
             return task_details
         else:
-            print(f"{self.name} could not optimize the task due to unknown priority.")
             print(f"{self.name} cannot create tasks.")
             return None
 
@@ -36,10 +37,15 @@ class Agent:
 
                 optimized = f"{description} using {method}"
                 print(f"{self.name} optimized task to: {optimized}")
+                self.task_history.append(f"optimized task: {optimized}")
                 return optimized
         else:
             print(f"{self.name} cannot optimize tasks.")
             return task
+        def show_history(self):
+            print(f"\n Task history for {self.name}:")
+            for entry in self.task_history:
+                print(f"- {entry}")
         
 # --- MAIN PROGRAM ---
 print("Hello from the MultiAgent workflow optimizer!")
@@ -51,3 +57,6 @@ kaizen = Agent("Kaizen", "optimizer")
 initial_task = astra.create_task()
 if initial_task:
     final_task = kaizen.optimize_task(initial_task)
+
+    astra.show_history()
+    kaizen.show_history()
