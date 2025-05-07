@@ -17,3 +17,9 @@ workflow Automation for small businesses in Africa
      .Medium:Balanced method
      .Low:Resource-saving method
 -Dynamic outputs: Every run produces a unique task and optimization method, making the system more flexible.
+###milestone 3:Implemented task_history
+**Date**[7th May 2025]
+-Fixed typos and structural errors in agent logic.
+-Defined show_history() for both planner and optimizer agents.
+-Verified and tested the final output
+-Successfully pushed working version to GitHub.
