@@ -17,7 +17,7 @@ class Agent:
             priority = random.choice(["high", "medium", "low"])
             task_details = {"description": task, "priority": priority}
             print(f"{self.name} created task: {task}")
-            self.track_history.append(f"created task: {task_details}")
+            self.task_history.append(f"created task: {task_details}")
             return task_details
         else:
             print(f"{self.name} cannot create tasks.")
@@ -29,7 +29,7 @@ class Agent:
             priority = task["priority"]
             
             if priority == "high":
-                method = "fastsst algorithm"
+                method = "fastest algorithm"
             elif priority == "medium":
                 method = "balanced algorithm"
             else:
@@ -42,10 +42,12 @@ class Agent:
         else:
             print(f"{self.name} cannot optimize tasks.")
             return task
-        def show_history(self):
-            print(f"\n Task history for {self.name}:")
-            for entry in self.task_history:
-                print(f"- {entry}")
+        
+    def show_history(self):
+        print(f"\nTsk History for {self.name}:")
+        for entry in self.task_history:
+            print(f"- {entry}")
+    
         
 # --- MAIN PROGRAM ---
 print("Hello from the MultiAgent workflow optimizer!")
