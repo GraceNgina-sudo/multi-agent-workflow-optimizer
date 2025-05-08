@@ -23,3 +23,8 @@ workflow Automation for small businesses in Africa
 -Defined show_history() for both planner and optimizer agents.
 -Verified and tested the final output
 -Successfully pushed working version to GitHub.
+###milestone 4: Added coordinator Agent (Nova)
+**Date**[8th May 2025]
+-Introduced a third agent, Coordinator, named Nova
+-Nova manages the workflow between planner(Astra) and Optimizer(Kaizen)
+-Logged original and optimized tasks in a structured workflow log.
