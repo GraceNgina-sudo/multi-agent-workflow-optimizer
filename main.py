@@ -47,18 +47,43 @@ class Agent:
         print(f"\nTsk History for {self.name}:")
         for entry in self.task_history:
             print(f"- {entry}")
-    
-        
+
+# --- Coordinater Agent ---
+class Coordinator:
+    def __init__(self, name):
+        self.name = name
+        self.workflow_log = []
+
+    def manage_workflow(self, planner,optimizer):
+        task = planner.create_task()
+        if task:
+            optimized_task = optimizer.optimize_task(task)
+            self.workflow_log.append({
+                "original": taksk,
+                "optimized": optimized_task
+            })
+            print(f"{self.name} logged the optimized task.")
+
+    def show_log(self):
+        print(f"\nWorkflow log by {self.name}:")
+        for entry in self.workflow_log:
+            print(f"- Original: {entry['original']} / Optimized: {entry['optimized']}")
+     
 # --- MAIN PROGRAM ---
 print("Hello from the MultiAgent workflow optimizer!")
 print("Running intelligent agent simulation...\n")
 
 astra = Agent("Astra", "planner")
 kaizen = Agent("Kaizen", "optimizer")
+nova = Coordinator("Nova")
+#Run a single cycle
+nova.manage_workflow(astra, kaizen)
+#Show logs
+astra.show_history()
+kaizen.show_history()
+nova.show_log()
 
 initial_task = astra.create_task()
 if initial_task:
     final_task = kaizen.optimize_task(initial_task)
 
-    astra.show_history()
-    kaizen.show_history()
