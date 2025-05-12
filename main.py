@@ -87,3 +87,30 @@ initial_task = astra.create_task()
 if initial_task:
     final_task = kaizen.optimize_task(initial_task)
 
+from planner.planner import PlannerAgent
+from optimizer.optimizer import OptimizerAgent
+from executor.executor import ExecutorAgent
+
+def main():
+    # create instances of each agent
+    planner = PlannerAgent("Astra")
+    optimizer = OptimizerAgent("Kaizen")
+    executor = ExecutorAgent("Nova")
+
+    # planner creates a task
+    task = astra.create_task()
+    if task:
+        # optimizer optimizes the task
+        optimized_task = kaizen.optimize_task(task)
+        # executor executes the optimized task
+        executor.execute_task(optimized_task)
+
+        # show task history for each agent
+        astra.show_history()
+        kaizen.show_history()
+        nova.show_history()
+
+    if __name__ == "_main_":
+        main()
+        
+
