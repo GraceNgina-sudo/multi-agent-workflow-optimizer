@@ -37,3 +37,18 @@ I'm adding features step by step, and documenting my progress using Git commits 
 - Add agent collaboration logic
 - Store tasks in a shared queue
 - Add simple intelligence (learning from task history)
+
+## Project structure
+.
+├── main.py                      # Entry point: runs the agent simulation
+├── planner/
+│   └── planner.py              # PlannerAgent (Astra) - creates tasks
+├── optimizer/
+│   └── optimizer.py            # OptimizerAgent (Kaizen) - optimizes tasks
+├── executor/
+│   └── executor.py             # ExecutorAgent (Nova) - simulates task execution
+├── docs/
+│   └── mindmap.md              # Conceptual overview of the system
+└── README.md                   # Project overview and documentations
+
+
