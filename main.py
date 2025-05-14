@@ -42,6 +42,13 @@ class Agent:
         else:
             print(f"{self.name} cannot optimize tasks.")
             return task
+    def execute_task(self, task):
+        if self.role == "executor":
+            print(f"{self.name} is executing: {task}")
+            self.task_history.append(f"executed task: {task}")
+        else:
+            print(f"{self.name} cannot execute tasks.")
+            return None
         
     def show_history(self):
         print(f"\nTsk History for {self.name}:")
@@ -54,13 +61,15 @@ class Coordinator:
         self.name = name
         self.workflow_log = []
 
-    def manage_workflow(self, planner,optimizer):
+    def manage_workflow(self, planner,optimizer, executor):
         task = planner.create_task()
         if task:
             optimized_task = optimizer.optimize_task(task)
+            result = executor.execute_task(optimized_task)
             self.workflow_log.append({
-                "original": taksk,
-                "optimized": optimized_task
+                "original": task,
+                "optimized": optimized_task,
+                "executed": result
             })
             print(f"{self.name} logged the optimized task.")
 
@@ -70,47 +79,36 @@ class Coordinator:
             print(f"- Original: {entry['original']} / Optimized: {entry['optimized']}")
      
 # --- MAIN PROGRAM ---
-print("Hello from the MultiAgent workflow optimizer!")
-print("Running intelligent agent simulation...\n")
-
-astra = Agent("Astra", "planner")
-kaizen = Agent("Kaizen", "optimizer")
-nova = Coordinator("Nova")
+def main():
+    # create instances of each agent
+    planner = Agent("Astra", "planner")
+    optimizer = Agent("Kaizen", "optiimizer")
+    executor = Agent("Nova", "executor")
+    coordinator = Coordinator("Orion")
 #Run a single cycle
-nova.manage_workflow(astra, kaizen)
-#Show logs
-astra.show_history()
-kaizen.show_history()
-nova.show_log()
+    Coordinator.manage_workflow(planner, optimizer, executor)
 
-initial_task = astra.create_task()
-if initial_task:
-    final_task = kaizen.optimize_task(initial_task)
-
+# --- Importing the agents ---
 from planner.planner import PlannerAgent
 from optimizer.optimizer import OptimizerAgent
 from executor.executor import ExecutorAgent
+from coordinator.coordinator import Coordinator
 
 def main():
     # create instances of each agent
     planner = PlannerAgent("Astra")
     optimizer = OptimizerAgent("Kaizen")
     executor = ExecutorAgent("Nova")
+    coordinator = Coordinator("Orion")
 
-    # planner creates a task
-    task = astra.create_task()
-    if task:
-        # optimizer optimizes the task
-        optimized_task = kaizen.optimize_task(task)
-        # executor executes the optimized task
-        executor.execute_task(optimized_task)
+    coordinator.manage_workflow(planner, optimizer, executor)
 
-        # show task history for each agent
-        astra.show_history()
-        kaizen.show_history()
-        nova.show_history()
+    planner.show_history()
+    optimizer.show_history()
+    executor.show_history()
+    coordinator.show_log()
 
-    if __name__ == "_main_":
+    if __name__ == "__main__":
         main()
         
 
