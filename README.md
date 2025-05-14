@@ -42,12 +42,18 @@ I'm adding features step by step, and documenting my progress using Git commits 
 .
 ├── main.py                      # Entry point: runs the agent simulation
 ├── planner/
+│   ├── __init__.py
 │   └── planner.py              # PlannerAgent (Astra) - creates tasks
 ├── optimizer/
+│   ├── __init__.py
 │   └── optimizer.py            # OptimizerAgent (Kaizen) - optimizes tasks
 ├── executor/
+│   ├── __init__.py
 │   └── executor.py             # ExecutorAgent (Nova) - simulates task execution
-├── docs/
+├── coordinator/
+│   ├── __init__.py
+│   └── coordinator.py # contains Coordinator/
+|── docs/
 │   └── mindmap.md              # Conceptual overview of the system
 └── README.md                   # Project overview and documentations
 
