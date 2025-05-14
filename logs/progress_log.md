@@ -38,3 +38,9 @@ workflow Automation for small businesses in Africa
  -executor/ for Nova
 -Created respective .py files for each agent
 -Refactored main.py to import agents from their modules
+### milestone 6: Fixed issues 
+**Date**[14th May 2025]
+-Modular agent logic
+-Role-specific task handling
+-Task history and centralized workflow log
+-Coordinator to oversee ochestration
