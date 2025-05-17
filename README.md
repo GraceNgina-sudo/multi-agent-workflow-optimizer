@@ -39,20 +39,21 @@ I'm adding features step by step, and documenting my progress using Git commits 
 - Add simple intelligence (learning from task history)
 
 ## Project structure
-.
-├── main.py                      # Entry point: runs the agent simulation
+project_root/
+|
+├── main.py                      
 ├── planner/
 │   ├── __init__.py
-│   └── planner.py              # PlannerAgent (Astra) - creates tasks
+│   └── planner_agent.py              #
 ├── optimizer/
 │   ├── __init__.py
-│   └── optimizer.py            # OptimizerAgent (Kaizen) - optimizes tasks
+│   └── optimizer_agent.py            t
 ├── executor/
 │   ├── __init__.py
-│   └── executor.py             # ExecutorAgent (Nova) - simulates task execution
+│   └── executor_agent.py             
 ├── coordinator/
 │   ├── __init__.py
-│   └── coordinator.py # contains Coordinator/
+│   └── coordinator_agent.py
 |── docs/
 │   └── mindmap.md              # Conceptual overview of the system
 └── README.md                   # Project overview and documentations
