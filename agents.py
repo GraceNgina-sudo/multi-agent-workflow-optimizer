@@ -1,11 +1,5 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
 from datetime import datetime
 import random
-import json
-
-app = FastAPI(title="MultiAgent Workflow Optimizer")
-
 
 print("Hello from the MultiAgent workflow optimizer!")
 
@@ -148,48 +142,3 @@ class Coordinator:
         for entry in self.workflow_log:
             print(f"- Original: {entry['original']} / Optimized: {entry['optimized']} / Result: {entry['executed_result']}")
 
-# --- MAIN PROGRAM ---
-def main():
-    # Create agents
-    planner = PlannerAgent("Astra")
-    optimizer = OptimizerAgent("Kaizen")
-    executor = ExecutorAgent("Nova")
-    coordinator = Coordinator("Orion")
-
-    # Register agents in shared registry
-    AGENTS["Astra"] = planner
-    AGENTS["Kaizen"] = optimizer
-    AGENTS["Nova"] = executor
-    AGENTS["Orion"] = coordinator  # Even though not subclass of Agent, added for messaging
-
-    #---API Endpoint---
-    @app.post("/workflow")
-    def run_workflow():
-        result = coordinator.manage_workflow(planner, optimizer, executor)
-        if result:
-            return{
-                "status": "success",
-                "workflow":result
-            }
-    return{
-        "status": "error",
-        "message": "Task creation failed"
-    }
-    
-    # Run one cycle
-    coordinator.manage_workflow(planner, optimizer, executor)
-
-    # Show task history
-    planner.show_history()
-    optimizer.show_history()
-    executor.show_history()
-    coordinator.show_log()
-
-    # Save to file
-    with open("workflow_log.json", "w") as f:
-        json.dump(coordinator.workflow_log, f, indent=4)
-        print("Workflow log saved to workflow_log.json")
-
-# Run the program
-if __name__ == "__main__":
-    main()
