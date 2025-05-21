@@ -1,51 +1,33 @@
 from fastapi import FastAPI
+from db import run_workflow as orchestrate
 from agents import PlannerAgent, OptimizerAgent, ExecutorAgent, Coordinator, AGENTS
-from datetime import datetime
-import json
+from coordinator.routes import router as coordinator_router
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
-# --- AGENT REGISTRY ---
+
+# Initialize the database
+init_db()
+
+#Register API routes from coordinator
+app.include_router(coordinator_router)
+
+# --- Agent Initialization ---
 planner = PlannerAgent("Astra")
 optimizer = OptimizerAgent("Kaizen")
 executor = ExecutorAgent("Nova")
 coordinator = Coordinator("Orion")
+
+#Register agents globally
 AGENTS["Astra"] = planner
 AGENTS["Kaizen"] = optimizer
 AGENTS["Nova"] = executor
 AGENTS["Orion"] = coordinator
 
 @app.post("/Workflow")
-def run_workflow():
-    task = planner.create_task()
-    if task:
-        optimized_task = optimizer.optimize_task(task)
-        optimizer.send_message(executor.name, f"optimized task: {optimized_task}")
+def trigger_workflow():
+    """
+    Initiates a full multi-agent workflow: planning → optimizing → execution → coordination.
+    """
+    return orchestrate(planner, optimizer, executor, coordinator)
 
-        result = executor.execute_task(optimized_task)
-        executor.send_message(coordinator.name, f"Execution result: {result}")
-
-        coordinator.workflow_log.append({
-            "original": task,
-            "optimized": optimized_task,
-            "executed_result": result,
-            "timestamp": datetime.now().isoformat()
-        })
-        with open("workflow_log.json", "w") as f:
-            json.dump(coordinator.workflow_log, f, indent=4)
-
-        return{
-            "status": "success",
-            "workflow": {
-                "original": task,
-                "optimized": optimized_task,
-                "result": result
-            }
-        }
-    else:
-        return {
-            "status": "error",
-            "message": "Task creation failed."
-        }
-
-
-
+    
