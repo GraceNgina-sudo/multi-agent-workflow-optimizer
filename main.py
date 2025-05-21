@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from db import run_workflow as orchestrate
+from orchestrator import run_workflow as orchestrate
 from agents import PlannerAgent, OptimizerAgent, ExecutorAgent, Coordinator, AGENTS
 from coordinator.routes import router as coordinator_router
 
