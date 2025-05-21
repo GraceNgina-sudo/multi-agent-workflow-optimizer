@@ -1,4 +1,5 @@
 from datetime import datetime
+from db import log_agent
 import random
 
 print("Hello from the MultiAgent workflow optimizer!")
@@ -32,6 +33,8 @@ class Agent:
         else:
             print(f"{self.name} cannot create tasks.")
             return None
+        log_agent(self.name, "created task", str(task_details))
+        return task_details
 
     def optimize_task(self, task):
         if self.role == "optimizer":
@@ -54,7 +57,8 @@ class Agent:
         else:
             print(f"{self.name} cannot optimize tasks.")
             return task
-
+        log_agent(self.name, "created task", str(task_details))
+        return task_details
     def execute_task(self, task):
         if self.role == "executor":
             print(f"{self.name} is executing: {task}")
@@ -70,6 +74,8 @@ class Agent:
         else:
             print(f"{self.name} cannot execute tasks.")
             return None
+        log_agent(self.name, "executed task", str(task))
+        return task_details
 
     def show_history(self):
         print(f"\nTask History for {self.name}:")
