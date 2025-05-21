@@ -34,4 +34,13 @@ class CoordinatorAgent(Agent):
         for entry in self.workflow_log:
             print(f"- Original: {entry['original']} / Optimized: {entry['optimized']} / Result: {entry['executed_result']}")
 
+from fastapi import APIRouter
+router = APIRouter()
+
+@router.post("/start")
+def start_workflow_endpoint(task_name: str, input_data: dict):
+    coordinator = WorkflowCoordinator(astra=...)
+    coordinator.start_workflow(task_name, input_data)
+    return {"message": "Workflow started"}
+
             
