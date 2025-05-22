@@ -1,5 +1,6 @@
 from datetime import datetime
 from db import log_task, log_agent
+from agents import Agent
 
 class WorkflowCoordinator:
     def __init__(self, astra):
@@ -37,7 +38,7 @@ class CoordinatorAgent(Agent):
 from fastapi import APIRouter
 router = APIRouter()
 
-@router.post("/coordinator/test")
+@router.get("/coordinator/test")
 def test():
     return {"message": "Coordinator route working!"}
 
