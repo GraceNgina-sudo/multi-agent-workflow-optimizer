@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from orchestrator import run_workflow as orchestrate
 from agents import PlannerAgent, OptimizerAgent, ExecutorAgent, Coordinator, AGENTS
-from coordinator.routes import router as coordinator_router
+from agent.coordinator import router as coordinator_router
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
 
@@ -23,11 +23,9 @@ AGENTS["Kaizen"] = optimizer
 AGENTS["Nova"] = executor
 AGENTS["Orion"] = coordinator
 
-@app.post("/Workflow")
-def trigger_workflow():
-    """
-    Initiates a full multi-agent workflow: planning → optimizing → execution → coordination.
-    """
-    return orchestrate(planner, optimizer, executor, coordinator)
+@app.get("/")
+def root():
+    return {"message": "Hello from the MultiAgent workflow optimizer!"}
+app.include_router(coordinator_router)
 
     
