@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from orchestrator import run_workflow as orchestrate
 from agents import PlannerAgent, OptimizerAgent, ExecutorAgent, Coordinator, AGENTS
 from agent.coordinator import router as coordinator_router
+from db import init_db
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
 
