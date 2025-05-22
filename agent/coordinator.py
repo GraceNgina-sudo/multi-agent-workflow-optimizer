@@ -37,10 +37,8 @@ class CoordinatorAgent(Agent):
 from fastapi import APIRouter
 router = APIRouter()
 
-@router.post("/start")
-def start_workflow_endpoint(task_name: str, input_data: dict):
-    coordinator = WorkflowCoordinator(astra=...)
-    coordinator.start_workflow(task_name, input_data)
-    return {"message": "Workflow started"}
+@router.post("/coordinator/test")
+def test():
+    return {"message": "Coordinator route working!"}
 
             
