@@ -1,6 +1,7 @@
 from datetime import datetime
 from db import log_agent
 import random
+from orchestrator import orchestrator
 
 print("Hello from the MultiAgent workflow optimizer!")
 
@@ -32,7 +33,6 @@ class Agent:
             return task_details
         else:
             print(f"{self.name} cannot create tasks.")
-            return None
         log_agent(self.name, "created task", str(task_details))
         return task_details
 
@@ -147,4 +147,14 @@ class Coordinator:
         print(f"\nWorkflow log by {self.name}:")
         for entry in self.workflow_log:
             print(f"- Original: {entry['original']} / Optimized: {entry['optimized']} / Result: {entry['executed_result']}")
+
+if __name__ == "__main__":
+    system = orchestrator()
+    task = system.run_planning_cycle()
+    print("Task created:", task)
+
+    print("\nTask History")
+    for t in system.get_task_history():
+        print(t)
+        
 
