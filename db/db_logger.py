@@ -1,5 +1,5 @@
 import sqlite3
-import json # Added import
+import json 
 from datetime import datetime
 
 def init_db():
