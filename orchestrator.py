@@ -1,21 +1,29 @@
-from agent.planner.planner_agent import PlannerAgent
+from agent.planner.planner_agent import plannerAgent
 from agent.executor.executor_agent import ExecutorAgent
 from db.db_logger import log_task, log_agent
 from agent.optimizer.optimizer_agent import OptimizerAgent
-
-
+from agent.planner.gpt_planner import GPTPlannerAgent
 
 class Orchestrator:
     def __init__(self):
-        self.planner = PlannerAgent(name="Astra")
-        self.optimizer = OptimizerAgent(name="Kaizen")
+        self.planner_agent = GPTPlannerAgent(model_name="planner-GPT")
+        # Initialize agents
+        self.planner = plannerAgent(name="Astra")
+        self.optimizer = OptimizerAgent(name="Kaizen", role="optimizer")
         self.executor = ExecutorAgent(name="Nova")
 
     def run_workflow_cycle(self):
         #Step 1: Planner creates task
-        task = self.planner.run()
-        log_task(name=task["description"], status="created")
-        log_agent(agent_name=self.planner.name, action="planned task", output=str(task))
+        try:
+            task = self.planner.run()
+            if not isinstance(task, dict):
+                print("Error:Plnner did not return a valid task.")
+                return {"error": "Planner did not return a valid task."}
+            log_task(name=task["description"], status="created")
+            log_agent(agent_name=self.planner.name, action="planned task",output=str(task))
+        except Exception as e:
+            print(f"Error during planning phase:{e}")#Handle error, maybe log it and exit or try a recovery step
+            return {"error": str(e)}
 
         #step 2: optimizer refines the task
         optimized_task = self.optimizer.run(task)
