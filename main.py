@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from agent.Planner.planner_agent import PlannerAgent
 from agent.optimizer.optimizer_agent import OptimizerAgent
 from agent.executor.executor_agent import ExecutorAgent
@@ -6,18 +6,17 @@ from coordinator.agent_orchestrator import CoordinatorAgent
 from db.db_logger import init_db, log_task, log_agent, log_workflow_history
 import uvicorn
 from datetime import datetime
-
-
-
+from orchestrator import Orchestrator
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
+orchestrator = Orchestrator()
 
 # Initialize the database
 init_db()
 
 # Instantiate Agents
 planner = PlannerAgent(name="Astra")
-optimizer = OptimizerAgent(name="Kaizen")
+optimizer = OptimizerAgent(name="Kaizen", role="optimizer")
 executor = ExecutorAgent(name="Nova")
 coordinator = CoordinatorAgent(name="Orion")
 
@@ -89,5 +88,14 @@ def get_agents():
 def get_workflows():
     workflows = fetch_workflow_history()
     return {"workflow_history": workflows}
+
+@app.get("/ai-simulate")
+def simulate_ai_planner(user_input: str = Query(..., description="Describe what you want done")):
+    task = orchestrator.planner.create_task(user_input)
+    return{
+        "Generated Task": task
+    }
+
+
 
 
