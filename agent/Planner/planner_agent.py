@@ -3,11 +3,12 @@ from datetime import datetime
 from data_types.agent import Agent
 from db.db_logger import log_agent
 
-class PlannerAgent(Agent):
+class plannerAgent(Agent):
     """An agent responsible forplanning tasks."""
     def __init__(self, name="Astra", role="planner"):
         super().__init__(name, role)
         self.task_history = []
+        self.task_pool = ["clean raw data", "sort entries", "Analyze logs", "Label data", "merge datasets"]
         
     def run(self, input_data=None):
         """Runs the planner agent to create a task."""
@@ -18,8 +19,7 @@ class PlannerAgent(Agent):
             task = input
         else:
             task = random.choice(self.task_pool)
-        task_pool = ["clean raw data", "sort entries", "Analyze logs", "Label data", "merge datasets"]
-        task = random.choice(task_pool)
+        task = random.choice(self.task_pool)
         priority = random.choice(["high", "medium", "low"])
         task_details = {
             "description": task,
