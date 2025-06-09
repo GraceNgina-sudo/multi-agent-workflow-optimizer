@@ -1,11 +1,11 @@
 from datetime import datetime
 from db.db_logger import log_task, log_agent
-from agents import Agent
+from agent import Agent
 
 class WorkflowCoordinator:
     def __init__(self, astra):
         self.astra = astra
-    def start_workflow(self, task_name, input_daya):
+    def start_workflow(self, task_name, input_data):
         log_task(name=task_name, status="started")
         result = self.astra.run(input_data)
         log_agent(agent_name="Astra", action="Analyzed input", output=result)
@@ -13,8 +13,7 @@ class WorkflowCoordinator:
 class CoordinatorAgent(Agent):  
     def __init__(self, name, role="coordinator"):
         super().__init__(name, role)
-        self.name = name
-        self.worlflow_log = []
+        self.workflow_log = []
 
     def manage_workflow(self, planner, optimizer, executor):
         task = planner.create_task()
