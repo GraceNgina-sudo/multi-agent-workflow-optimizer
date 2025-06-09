@@ -2,8 +2,11 @@ from datetime import datetime
 from db.db_logger import log_task, log_agent
 from data_types.agent import Agent
 from fastapi import APIRouter
+from agent.planner.planner_agent import plannerAgent
+from agent.optimizer.optimizer_agent import OptimizerAgent
+from agent.executor.executor_agent import ExecutorAgent
 
-class CoordinatorAgent(Agent):
+class coordinatorAgent(Agent):
     def __init__(self, name="orion", role="coordinator"):
         super().__init__(name, role)
         self.workflow_log = []
@@ -39,6 +42,15 @@ class CoordinatorAgent(Agent):
         print(f"\nWorkflow log by {self.name}:")
         for entry in self.workflow_log:
             print(f"- Original: {entry['original']} / Optimized: {entry['optimized']} / Result: {entry['executed_result']}")
+
+
+class apporchestrator:
+    def __init__(self, name="apporchestrator", role="orchestrator"):
+        self.name = name
+        self.role = role
+        self.planner = plannerAgent(name="Astra", role="planner")
+        self.optimizer = OptimizerAgent(name="Kaizen", role="optimizer")
+        self.executor = ExecutorAgent(name="Nova", role="executor")
 
 router = APIRouter()
 
