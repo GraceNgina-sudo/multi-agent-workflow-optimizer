@@ -1,7 +1,7 @@
 from datetime import datetime
-from db import log_agent
+from db.db_logger import log_agent
 import random
-from orchestrator import orchestrator
+from app_orchestrator import apporchestrator
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -151,7 +151,7 @@ class Coordinator:
             print(f"- Original: {entry['original']} / Optimized: {entry['optimized']} / Result: {entry['executed_result']}")
 
 if __name__ == "__main__":
-    system = orchestrator()
+    system = apporchestrator()
     task = system.run_planning_cycle()
     print("Task created:", task)
 
