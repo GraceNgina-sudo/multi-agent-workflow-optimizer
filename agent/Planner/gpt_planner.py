@@ -5,7 +5,7 @@ import os
 from agent_base import Agent  # Assuming agent_base.py contains the base Agent class
 
 load_dotenv()
-class GPTPlannerAgent(Agent):
+class GPTplannerAgent(Agent):
     def __init__(self, model_name="planner-GPT"):
         self.name = model_name
         self.llm = ChatOpenAI(model="gpt-4", temperature=0.3)
