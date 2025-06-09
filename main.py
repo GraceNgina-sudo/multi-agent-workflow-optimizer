@@ -1,24 +1,24 @@
 from fastapi import FastAPI, Query
-from agent.Planner.planner_agent import PlannerAgent
+from agent.planner.planner_agent import plannerAgent
 from agent.optimizer.optimizer_agent import OptimizerAgent
 from agent.executor.executor_agent import ExecutorAgent
-from coordinator.agent_orchestrator import CoordinatorAgent
+from coordinator.agent_orchestrator import coordinatorAgent
 from db.db_logger import init_db, log_task, log_agent, log_workflow_history
 import uvicorn
 from datetime import datetime
-from orchestrator import Orchestrator
+from coordinator.agent_orchestrator import apporchestrator
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
-orchestrator = Orchestrator()
+orchestrator = apporchestrator()
 
 # Initialize the database
 init_db()
 
 # Instantiate Agents
-planner = PlannerAgent(name="Astra")
+planner = plannerAgent(name="Astra")
 optimizer = OptimizerAgent(name="Kaizen", role="optimizer")
 executor = ExecutorAgent(name="Nova")
-coordinator = CoordinatorAgent(name="Orion")
+coordinator = coordinatorAgent(name="Orion")
 
 # /Endpoint(Health Check)
 @app.get("/")
