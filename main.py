@@ -1,18 +1,36 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from fastapi import FastAPI, Query
 from agent.planner.planner_agent import plannerAgent
 from agent.optimizer.optimizer_agent import OptimizerAgent
 from agent.executor.executor_agent import ExecutorAgent
 from coordinator.agent_orchestrator import coordinatorAgent
 from db.db_logger import init_db, log_task, log_agent, log_workflow_history
-import uvicorn
 from datetime import datetime
 from coordinator.agent_orchestrator import apporchestrator
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
 orchestrator = apporchestrator()
+# Middleware for CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Initialize the database
 init_db()
+
+class TaskRequest(BaseModel):
+    description: str
+    category: str = "general"
+    priority: str = "medium"
 
 # Instantiate Agents
 planner = plannerAgent(name="Astra")
@@ -26,14 +44,22 @@ def root():
     return {"message": "Multi-Agent Workflow System running."}
 
 # /simulate Endpoint(Main Workflow Simulation)
-@app.get("/simulate")
-def simulate_agents():
+@app.post("/ai-simulate")
+def simulate_agents(request: TaskRequest):
+    user_input = f"{request.description} with category {request.category} and priority {request.priority}"
+
     print("\n--- Agent Simulation Started ---")
 
     # Step 1: Planning
-    task = planner.run()
+    task = planner.run(user_input)
     print(f"[Planner: {planner.name}] Planned Task: {task}")
-    log_task(task["description"], status="created")
+    
+    # Added check to prevent KeyError if task is not a dict or lacks 'description'
+    if isinstance(task, dict) and "description" in task:
+        log_task(task["description"], status="created")
+    else:
+        # Assuming the task itself can be logged if it's not in the expected dict format.
+        log_task(str(task), status="created")
 
     # Step 2: Optimization
     optimized = optimizer.run(task)
@@ -67,12 +93,7 @@ def simulate_agents():
 def history():
     return coordinator.workflow_log
 
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-
 from db.db_logger import get_task_logs, get_agent_logs, fetch_workflow_history
-
 
 @app.get("/logs/tasks")
 def get_tasks():
@@ -96,6 +117,8 @@ def simulate_ai_planner(user_input: str = Query(..., description="Describe what 
         "Generated Task": task
     }
 
-
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "message": "API is running smoothly."}
 
 
