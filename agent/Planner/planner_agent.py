@@ -4,7 +4,7 @@ from data_types.agent import Agent
 from db.db_logger import log_agent
 
 class plannerAgent(Agent):
-    """An agent responsible forplanning tasks."""
+    """An agent responsible for planning tasks."""
     def __init__(self, name="Astra", role="planner"):
         super().__init__(name, role)
         self.task_history = []
