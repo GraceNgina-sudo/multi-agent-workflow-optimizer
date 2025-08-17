@@ -1,3 +1,7 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from agent.planner.planner_agent import plannerAgent
 from agent.executor.executor_agent import ExecutorAgent
 from db.db_logger import log_task, log_agent
