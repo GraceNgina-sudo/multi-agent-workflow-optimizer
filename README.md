@@ -1,110 +1,141 @@
-# Multi-Agent Workflow Optimizer (Learning Project)
+# Multi-Agent Workflow Optimizer 
+An experimental multi-agent system built in python that simulates how specialized agents can plan, optimize, and execute tasks collaboratively.
 
-This is a beginner-friendly Python project simulating a simple multi-agent system to perform and optimize tasks.
+This project started as a leraning exercise and has since grown into a more strucutured application with a backened (FastAPI), database logging, and a frontend interface for user interaction
 
-## Purpose
+## Purpose 
+The project's core purpose is to explore multi-agent systems in a practical way while learning modern development practices. 
 
-This project serves as a practical learning exercise in Python, focusing on the design and implementation of a multi-agent system. The primary goals are:
-- To explore and understand the fundamentals of object-oriented programming (OOP) in Python.
-- To simulate a workflow where different "agents" (software components) collaborate to manage and optimize tasks.
-- To gain experience in task automation, agent-based modeling, and basic software architecture.
-- To practice software development best practices, including version control with Git, writing clear documentation, and iterative development.
-The system aims to model a simplified environment where tasks are created, planned, executed, and optimized by specialized agents, providing a tangible way to learn about distributed responsibilities and inter-component communication.
+### Key goals:
+- Understand object-oriented programming (oop) and agent-based design in python
+- Simulate collaborative workflows between different agents (planner, Optimizer, Executor, Coordinator).
+- Gain hands-on experience with FastAPI, databases, and frontend-backend integration.
+- Practice software engineering principles: logging, modularity, and system design.
+- Lay the foundation for future integration with AI/LLMs for smarter decision-making.
 
-## What It Does
+## What it does:
+- Accepts a user query via the frontend (form input).
 
-- Planner agents create tasks with random priorities
-- Optimizer agents adjust how the tasks are executed based on the priority
-- Logs agent actions and tracks task history
+- Planner Agent: Interprets the query and creates a task plan.
 
-## Still Learning...
+- Optimizer Agent: Refines the plan for efficiency.
 
-This project is **not production-ready** — it's a work-in-progress as I continue learning.
-I'm adding features step by step, and documenting my progress using Git commits and milestone logs.
+- Executor Agent: Simulates carrying out the task.
 
-## Skills I'm Practicing
-- Python classes and methods
-- Random module
-- Git & GitHub
-- Writing clean code
-- Logging project milestones
+- Coordinator Agent: Logs the full workflow and maintains history.
 
-## Completed
-- Set up GitHub repo
-- Built base agent classes
-- Created a working simulation loop
-- Logged milestones
+- All actions are logged into a SQLite database for traceability.
+
+- Users can view task history and workflow logs via API endpoints.
+
+## Tech stack:
+- Backend: FastAPI (Python)
+- Frontend:  JS + Bootstrap (form-based interface)
+- Database: SQLite (lightweight logging & workflow storage)
+- Server: Uvicorn (ASGI server for FastAPI)
+- Architecture: Modular agent-based design with orchestrator
+
+## Usage
+1. Run the FastAPI app:
+uvicorn main:app --reload
+
+2. Open the frontend (with form connected to /ai-simulate)
+
+3. Enter a query
+
+4. Agents collaborate to: Plan-optimize-execute-log
+
+5. View results in the UI or query logs via endpoints
+
+## Current Features
+- Multi-agent collaboration (Planner, Optimizer, Executor, Coordinator).
+
+- API endpoints for simulation, history, and logs.
+
+- Frontend with query input and response display.
+
+- Database-backed logging for transparency.
+
+- CORS-enabled middleware for smooth frontend-backend interaction.
 
 ## Next Steps
+- LLM/GPT integration for smarter planning and task understanding.
 
-The following enhancements are planned for the project:
+- Polish UI with better workflow visualization and dashboards.
 
--   **Enhance Agent Collaboration:** Improve the logic for how different agents interact and share information to make more coordinated decisions.
--   **Implement a Shared Task Queue:** Develop a robust, centralized queue for managing tasks, allowing agents to pick up, process, and update task statuses efficiently.
--   **Introduce Basic AI Capabilities:**
-    -   **Smarter Task Prioritization:** Explore using simple machine learning models or rule-based systems to enable agents to learn from historical task data (e.g., completion times, success rates) and make more intelligent decisions about task prioritization and resource allocation.
-    -   **Adaptive Optimization:** Allow the Optimizer agent to adapt its strategies based on observed patterns or feedback, potentially using reinforcement learning concepts in a simplified manner.
-    -   **(Future Exploration) LLM Integration:** Consider integrating with Large Language Models (LLMs) for tasks like natural language understanding of task descriptions, generating task plans, or providing more sophisticated decision support to agents.
--   **Improve Logging and Monitoring:** Enhance the logging mechanism for better traceability and implement a basic monitoring dashboard to visualize agent activity and system performance.
--   **Expand Agent Roles:** Introduce new agent types with specialized skills to handle a wider variety of tasks or aspects of the workflow.
--   **Refine UI/Visualization:** If feasible, develop a simple user interface or visualization tool to better observe the multi-agent system in action.
+- Cloud Deployment (e.g., Render, Vercel, or AWS).
 
-## Project Structure
+- Subscription Model for monetization (SaaS-like offering).
 
-The project is organized as follows:
+- Expand agents with new specialized roles.
 
-```
+## What i've learnt
+- Building APIs with FastAPI.
+
+- Designing modular agent architectures.
+
+- Setting up frontend-backend communication.
+
+- Using SQLite for logging and persistence.
+
+- Handling CORS, validation, and request models in APIs.
+
+## project Structure
 multi-agent-workflow-optimizer/
-├── .gitignore                   # Specifies intentionally untracked files that Git should ignore
-├── agents.py                    # Main script or entry point for agent-related functionalities
+├── .gitignore                   # Ignore Python cache, venv, db, logs, etc.
 ├── LICENSE                      # Project's software license
-├── main.py                      # Main entry point of the application
-├── notes.code-workspace         # VS Code workspace configuration file
-├── orchestrator.py              # Handles the overall workflow and coordination of agents
-├── project_plan.md              # Document outlining the project plan and milestones
-├── README.md                    # This file: Project overview, setup, and usage instructions
-├── workflow.db                  # SQLite database for storing workflow data, tasks, logs etc.
+├── README.md                    # Project overview, setup, and usage
+├── requirements.txt             # Python dependencies
+├── main.py                      # FastAPI entry point (launches app & endpoints)
+├── notes.code-workspace         # VS Code workspace settings
+├── workflow.db                  # SQLite database (local persistence)
+
 │
-├── agent/                       # Contains modules related to different types of agents
-│   ├── __init__.py              # Makes the 'agent' directory a Python package
-│   ├── coordinator/             # Agent responsible for coordinating other agents
-│   │   ├── __init__.py
-│   │   └── coordinator.py
-│   ├── executor/                # Agent responsible for executing tasks
-│   │   ├── __init__.py
-│   │   └── executor_agent.py
-│   ├── optimizer/               # Agent responsible for optimizing task execution
-│   │   ├── __init__.py
-│   │   └── optimizer_agent.py
-│   ├── Planner/                 # Agent responsible for planning tasks
+├── agent/                       # Core agent implementations
+│   ├── __init__.py
+│   ├── planner/                 # Planner Agent (task generation)
 │   │   ├── __init__.py
 │   │   └── planner_agent.py
-│   └── services/                # Common services used by agents
-│       └── task_service.py      # Service for managing tasks
+│   ├── optimizer/               # Optimizer Agent (task improvement)
+│   │   ├── __init__.py
+│   │   └── optimizer_agent.py
+│   ├── executor/                # Executor Agent (task execution)
+│   │   ├── __init__.py
+│   │   └── executor_agent.py
+│   ├── coordinator/             # Coordinator Agent (task assignment & flow)
+│   │   ├── __init__.py
+│   │   └── coordinator_agent.py
+│   └── services/                # Shared agent services/utilities
+│       ├── __init__.py
+│       └── task_service.py
 │
-├── coordinator/                 # (Potentially a higher-level coordinator, distinct from agent/coordinator)
-│   └── agent_orchestrator.py    # Orchestrates different agents
+├── coordinator/                 # System-level orchestrator
+│   └── agent_orchestrator.py    # Manages cross-agent workflows
 │
-├── core/                        # Core functionalities and utilities
-│   └── router.py                # Handles routing or message passing
+├── core/                        # Core infrastructure
+│   └── router.py                # Message passing / event routing
 │
-├── data_types/                  # Custom data structures or type definitions
+├── data_types/                  # Custom data models
 │   ├── __init__.py
-│   └── agent.py                 # Data type definition for an Agent
+│   └── agent.py                 # Agent data type definition
 │
-├── db/                          # Database related modules
+├── db/                          # Database logging + persistence
 │   ├── __init__.py
-│   └── db_logger.py             # Logger that writes to the database
+│   └── db_logger.py             # Handles logging to SQLite
 │
-├── docs/                        # Documentation files
-│   └── workflow_mindmap.md      # Mindmap illustrating the project workflow
+├── docs/                        # Documentation
+│   └── workflow_mindmap.md      # Visual workflow design
 │
-├── logs/                        # Directory for log files
-│   └── progress_log.md          # Log of project progress
-│
-├── Tests/                       # Directory for test scripts (currently empty)
-│
-└── util/                        # Utility scripts or modules (currently empty)
-```
+├── logs/                        # Execution logs
+│   └── progress_log.md
+
+
+
+
+
+
+
+
+
 
 

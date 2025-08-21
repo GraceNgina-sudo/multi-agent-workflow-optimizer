@@ -15,10 +15,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="MultiAgent Workflow Optimizer")
 orchestrator = apporchestrator()
+
+origins = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+]
 # Middleware for CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=origins,  # Allows all origins
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
@@ -28,9 +33,7 @@ app.add_middleware(
 init_db()
 
 class TaskRequest(BaseModel):
-    description: str
-    category: str = "general"
-    priority: str = "medium"
+    query: str 
 
 # Instantiate Agents
 planner = plannerAgent(name="Astra")
@@ -46,48 +49,49 @@ def root():
 # /simulate Endpoint(Main Workflow Simulation)
 @app.post("/ai-simulate")
 def simulate_agents(request: TaskRequest):
-    user_input = f"{request.description} with category {request.category} and priority {request.priority}"
+    try:
+        user_input = request.query
 
-    print("\n--- Agent Simulation Started ---")
+        print("\n--- Agent Simulation Started ---")
+        print(f"User input: {user_input}")
 
-    # Step 1: Planning
-    task = planner.run(user_input)
-    print(f"[Planner: {planner.name}] Planned Task: {task}")
-    
-    # Added check to prevent KeyError if task is not a dict or lacks 'description'
-    if isinstance(task, dict) and "description" in task:
-        log_task(task["description"], status="created")
-    else:
-        # Assuming the task itself can be logged if it's not in the expected dict format.
-        log_task(str(task), status="created")
+        # Step 1: Planning
+        task = str(planner.run(user_input))
+        print(f"[Planner: {planner.name}] Planned Task: {task}")
 
-    # Step 2: Optimization
-    optimized = optimizer.run(task)
-    print(f"[Optimizer: {optimizer.name}] Optimized Task: {optimized}")
-    log_agent(optimizer.name, "Optimized Task", str(optimized))
+        # Added check to prevent KeyError if task is not a dict or lacks 'description'
+        if isinstance(task, dict) and "description" in task:
+            log_task(task["description"], status="created")
+        else:
+            # Assuming the task itself can be logged if it's not in the expected dict format.
+            log_task(str(task), status="created")
 
-    # Step 3: Execution
-    result = executor.run(optimized)
-    print(f"[Executor: {executor.name}] Execution Result: {result}")
-    log_agent(executor.name, "Executed Task", result)
+        # Step 2: Optimization
+        optimized = str(optimizer.run(task))
+        print(f"[Optimizer: {optimizer.name}] Optimized Task: {optimized}")
+        log_agent(optimizer.name, "Optimized Task", str(optimized))
 
-    # Step 4: Coordinator Logs
-    coordinator.workflow_log.append({
-        "original": task,
-        "optimized": optimized,
-        "executed_result": result,
-        "timestamp": datetime.now().isoformat()
-    })
-    log_workflow_history(task, optimized, result)
+        # Step 3: Execution
+        result = str(executor.run(optimized))
+        print(f"[Executor: {executor.name}] Execution Result: {result}")
+        log_agent(executor.name, "Executed Task", result)
 
-    print(f"[coordinator: {coordinator.name}] Logged workflow.")
-    print("--- Agent Simulation Completed ---\n")
+        # Step 4: Coordinator Logs
+        coordinator.workflow_log.append({
+            "original": task,
+            "optimized": optimized,
+            "executed_result": result,
+            "timestamp": datetime.now().isoformat()
+        })
+        log_workflow_history(task, optimized, result)
 
-    return {
-        "original_task": task,
-        "optimized_task": optimized,
-        "execution_result": result
-    }
+        print(f"[coordinator: {coordinator.name}] Logged workflow.")
+        print("--- Agent Simulation Completed ---\n")
+
+        return {"response": f"Simulation complete! Planned Task: {task}"}
+    except Exception as e:
+        print(f"Error during simulation: {e}")
+        return {"error": "An error occurred during the simulation."}
 
 @app.get("/history")
 def history():
@@ -110,15 +114,13 @@ def get_workflows():
     workflows = fetch_workflow_history()
     return {"workflow_history": workflows}
 
-@app.get("/ai-simulate")
-def simulate_ai_planner(user_input: str = Query(..., description="Describe what you want done")):
-    task = orchestrator.planner.create_task(user_input)
-    return{
-        "Generated Task": task
-    }
 
 @app.get("/health")
 def health_check():
     return {"status": "ok", "message": "API is running smoothly."}
+
+@app.get("/test-cors")
+def test_cors():
+    return {"message": "CORS is working!"}
 
 
